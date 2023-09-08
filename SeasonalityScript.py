@@ -39,6 +39,9 @@ class SeasonalityScript:
             self.month_numbers = []
             self.month_dummies = {}
             self.country_names = {}
+            # self.df = None
+            # self.weekly_df = None
+            # self.monthly_df = None
 
             self.country_id = country_code
             self.week_ending = week_ending
@@ -75,8 +78,8 @@ class SeasonalityScript:
         '''
         try:
             print("Building DataFrame...")
-            # Creates a list with all the dates between start_date and end_date
-            # Creates a DataFrame with only two columns: 'account' and 'date'
+            # Creates a list with all the dates between the start_date and end_date
+            # Creates a DataFrame with only one column: 'date'
             dates = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D")
             self.df = pd.DataFrame({"date": dates})
 
@@ -115,7 +118,7 @@ class SeasonalityScript:
                             
                             # Creates the (key, value) pair
                             if holiday_name not in self.holidays:
-                                self.holidays[holiday_name] = list()
+                                self.holidays[holiday_name] = []
                                 self.holidays[holiday_name].append(holiday_date)
                             else:
                                 self.holidays[holiday_name].append(holiday_date)
@@ -173,7 +176,7 @@ class SeasonalityScript:
                                 
                                 # Creates the (key, value) pair
                                 if holiday_name not in self.holidays:
-                                    self.holidays[holiday_name] = list()
+                                    self.holidays[holiday_name] = []
                                     self.holidays[holiday_name].append(holiday_date)
                                 else:
                                     self.holidays[holiday_name].append(holiday_date)
@@ -375,8 +378,7 @@ class SeasonalityScript:
             self.build_monthly_dummies()
             self.join_dataframes()
 
-            # Creates the 'account' column
-            # Re-arrange columns in order to have 'account' as the first one
+            # Creates the 'account' column and change the order of columns
             self.df["account"] = "national"
             columns = self.df.columns.tolist()
             columns = columns[-1:] + columns[:-1]
