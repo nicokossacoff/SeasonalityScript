@@ -32,6 +32,7 @@ class SeasonalityScript:
         :param week_ending: bool | converts data from daily to week ending. False by default.
         '''
         try:
+            print("Creating object...")
             self.years = []
             self.holidays = {}
             self.week_numbers = []
@@ -47,8 +48,8 @@ class SeasonalityScript:
             self.week_ending = week_ending
             self.day = day
             self.uk_country = uk_country
-            self.start_date = datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%d/%m/%Y")
-            self.end_date = datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%d/%m/%Y")
+            self.start_date = datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
+            self.end_date = datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
 
             start_year = int(datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y"))
             end_year = int(datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y"))
