@@ -4,19 +4,23 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-def get_available_countries():
-    '''
-    :reurns: str | all available countries and their country codes.
-    '''
+class Info:
+    def get_info(self):
+        '''
+        :reurns: str | all available countries and their country codes.
+        '''
+        self.country_info = {}
 
-    url = r'https://date.nager.at/api/v3/AvailableCountries'
-    connection = requests.get(url)
-    response = json.loads(connection.content)
-    
-    for item in response:
-        country_name = item["name"]
-        country_code = item["countryCode"]
-        print(country_name, f" ({country_code})")
+        url = r'https://date.nager.at/api/v3/AvailableCountries'
+        connection = requests.get(url)
+        response = json.loads(connection.content)
+        
+        for item in response:
+            country_name = item["name"]
+            country_code = item["countryCode"]
+            self.country_info[country_name] = country_code
+        
+        return self.country_info
 
 class SeasonalityScript:
     def __init__(self, country_code, start_date, end_date, day, uk_country= None, week_ending= False):
@@ -32,6 +36,7 @@ class SeasonalityScript:
         :param week_ending: bool | converts data from daily to week ending. False by default.
         '''
         try:
+            print("Creating object...")
             self.years = []
             self.holidays = {}
             self.week_numbers = []
@@ -47,8 +52,8 @@ class SeasonalityScript:
             self.week_ending = week_ending
             self.day = day
             self.uk_country = uk_country
-            self.start_date = datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%d/%m/%Y")
-            self.end_date = datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%d/%m/%Y")
+            self.start_date = datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
+            self.end_date = datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
 
             start_year = int(datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y"))
             end_year = int(datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y"))
@@ -111,9 +116,10 @@ class SeasonalityScript:
                     
                     # Parses the API's response
                     for item in response:
-                        if item["types"][0] == "Public":
+                        # Filters by national and public bank holidays
+                        if item["types"][0] == "Public" and item["counties"] == None:
                             # Extracts the name of the bank holiday and the date
-                            holiday_name = item["localName"]
+                            holiday_name = item["name"]
                             holiday_date = pd.to_datetime(item["date"], format= r"%Y-%m-%d")
                             
                             # Creates the (key, value) pair
@@ -148,10 +154,11 @@ class SeasonalityScript:
                 self.df["date"] = self.df["date"].dt.strftime(r"%d/%m/%Y")
 
                 # Handles punctuation issues
-                if self.country_id == "CA":
-                    self.df = self.df.rename(columns= {'''Fête nationale du Québec''': '''Fete nationale du Quebec'''})
+                if self.country_id == "AR":
+                    self.df = self.df.rename(columns= {'''General José de San Martín Memorial Day''': '''General Jose de San Martin Memorial Day''',
+                                                       '''Anniversary of the Passing of General Martín Miguel de Güemes''': '''Anniversary of the Passing of General Martin Miguel de Güemes'''})
 
-                print(f"Holidays for {self.country_id} successfully added to DataFrame")
+                print(f"Holidays for {self.country_names[self.country_id]} successfully added to DataFrame")
                 return self.df.head()
             # Code only for the UK requests
             if self.uk_country != None:
@@ -171,7 +178,7 @@ class SeasonalityScript:
                         try:
                             if item["types"][0] == "Public" and country in item["counties"]:
                                 # Extracts the name of the bank holiday and the date
-                                holiday_name = item["localName"]
+                                holiday_name = item["name"]
                                 holiday_date = pd.to_datetime(item["date"], format= r"%Y-%m-%d")
                                 
                                 # Creates the (key, value) pair
@@ -183,7 +190,7 @@ class SeasonalityScript:
                         except:
                             if item["types"][0] == "Public" or item["counties"] == None:
                                 # Extracts the name of the bank holiday and the date
-                                holiday_name = item["localName"]
+                                holiday_name = item["name"]
                                 holiday_date = pd.to_datetime(item["date"], format= r"%Y-%m-%d")
 
                                 # Creates the (key, value) pair     
