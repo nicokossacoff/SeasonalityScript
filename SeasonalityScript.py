@@ -20,7 +20,7 @@ class Info:
             country_code = item["countryCode"]
             self.country_info[country_name] = country_code
         
-        return self.country_info
+        return print(self.country_info)
 
 class SeasonalityScript:
     def __init__(self, country_code, start_date, end_date, day, uk_country= None, week_ending= False):
@@ -252,13 +252,6 @@ class SeasonalityScript:
             for (index, row) in self.weekly_df.iterrows():
                 self.week_numbers.append(row["date"].isocalendar().week)
             self.weekly_df["Week #"] = self.week_numbers
-
-            # Converts daily weeks to weekly
-            ## logic = {"Week #": "min"}
-            if self.week_ending == False:
-                self.weekly_df = self.weekly_df.resample(f"W-{self.day}", label= "left", closed= "left", on= "date").min()
-            else:
-                self.weekly_df = self.weekly_df.resample(f"W-{self.day}", label= "right", closed= "right", on= "date").min()
             
             # Creates the dummy columns and appends them to the DataFrame
             for i in range(1, 54):
@@ -274,9 +267,21 @@ class SeasonalityScript:
                 
                 self.weekly_df[f"Dummy {week}"] = self.week_dummies[week]
             
-            # Resets index, drops unused columns and changes the date format 
-            self.weekly_df.reset_index(inplace= True)
+            # Drop the 'Week #' column
             self.weekly_df = self.weekly_df.drop(columns= "Week #")
+
+            # Converts daily weeks to weekly
+            if self.week_ending == False:
+                self.weekly_df = self.weekly_df.resample(f"W-{self.day}", label= "left", closed= "left", on= "date").sum()
+            else:
+                self.weekly_df = self.weekly_df.resample(f"W-{self.day}", label= "right", closed= "right", on= "date").sum()
+            
+            # Replaces values to 1s and 0s
+            for column in self.weekly_df.columns:
+                self.weekly_df[column] = (self.weekly_df[column] > 3).astype(int)
+            
+            # Resets index and changes the date format 
+            self.weekly_df.reset_index(inplace= True)
             self.weekly_df["date"] = self.weekly_df["date"].dt.strftime(r"%d/%m/%Y")
 
             print("Weekly dummies successfully built")
