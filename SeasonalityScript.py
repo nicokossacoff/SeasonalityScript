@@ -414,7 +414,7 @@ class SeasonalityScript:
 
             # Creates a DataFrame with the blank rows needed for the modeling tool
             rows = list()
-            for r in range(0, 9):
+            for r in range(0, 10):
                 row = list()
                 if r == 9:
                     for c in range(0, len(self.df.columns)):
