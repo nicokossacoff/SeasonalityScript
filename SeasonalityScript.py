@@ -416,7 +416,7 @@ class SeasonalityScript:
             rows = list()
             for r in range(0, 9):
                 row = list()
-                if r == 8:
+                if r == 9:
                     for c in range(0, len(self.df.columns)):
                         if c == 0 or c == 1: row.append(None)
                         else: row.append("SUB")
