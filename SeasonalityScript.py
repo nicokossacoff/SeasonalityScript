@@ -312,7 +312,7 @@ class SeasonalityScript:
             
             # Creates the dummy variables and appends them to the DataFrame
             months = ["January", "February", "March", "April", "May", "June", 
-                        "July", "August", "September", "October", "November", "December"]
+                      "July", "August", "September", "October", "November", "December"]
 
             for i in range(1, 13):
                 month = months[i - 1]
