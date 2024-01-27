@@ -70,10 +70,11 @@ class SeasonalityScript:
             for item in response:
                 self.country_names[item["countryCode"]] = item["name"]
             
-            print("SeasonalityScript successfully created")
-        except Exception as ex:
-            print("Something went wrong while initializing the SeasonalityScript object...")
-            print(ex)
+            result = {"SeasonalityScript successfully created": True}
+            print(result)
+        except Exception as error:
+            print(error)
+            raise
     
     def build_dataframe(self):
         '''
@@ -88,12 +89,11 @@ class SeasonalityScript:
             dates = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D")
             self.df = pd.DataFrame({"date": dates})
 
-            print("DataFrame built succesfully")
-            return True
-        except Exception as ex:
-            print("Something went wrong on the build_dataframe() function...")
-            print(ex)
-            return False
+            result = {"DataFrame built succesfully": True}
+            print(result)
+        except Exception as error:
+            print(error)
+            raise
     
     def get_holidays(self):
         '''
@@ -158,8 +158,8 @@ class SeasonalityScript:
                     self.df = self.df.rename(columns= {'''General José de San Martín Memorial Day''': '''General Jose de San Martin Memorial Day''',
                                                        '''Anniversary of the Passing of General Martín Miguel de Güemes''': '''Anniversary of the Passing of General Martin Miguel de Güemes'''})
 
-                print(f"Holidays for {self.country_names[self.country_id]} successfully added to DataFrame")
-                return self.df.head()
+                result = {f"Holidays for {self.country_names[self.country_id]} successfully added to DataFrame": True}
+                print(result)
             # Code only for the UK requests
             if self.uk_country != None:
                 country = f"{self.country_names[self.country_id]} - {self.uk_country}"
@@ -228,12 +228,11 @@ class SeasonalityScript:
                 self.df = self.df.rename(columns= {'''Queen’s Platinum Jubilee BH''': '''Queen's Platinum Jubilee BH''', '''Queen’s State Funeral BH''': '''Queen's State Funeral BH''',
                                                 "Early May Bank Holiday BH": "Early May BH", "Spring Bank Holiday BH": "Spring BH", "Coronation Bank Holiday BH": "Coronation BH"})
                 
-                print(f"Holidays for {country} successfully added to DataFrame")
-                return self.df.head()
-        except Exception as ex:
-            print("Something went wrong on the get_holidays() function...")
-            print(ex)
-            return False
+                result = {f"Holidays for {country} successfully added to DataFrame": True}
+                print(result)
+        except Exception as error:
+            print(error)
+            raise
 
     def build_weekly_dummies(self):
         '''
@@ -284,12 +283,11 @@ class SeasonalityScript:
             self.weekly_df.reset_index(inplace= True)
             self.weekly_df["date"] = self.weekly_df["date"].dt.strftime(r"%d/%m/%Y")
 
-            print("Weekly dummies successfully built")
-            return self.weekly_df.head()
-        except Exception as ex:
-            print("Something went wrong on the build_weekly_dummies() function...")
-            print(ex)
-            return False
+            result = {"Weekly dummies built successfully": True}
+            print(result)
+        except Exception as error:
+            print(error)
+            raise
 
     def build_monthly_dummies(self):
         '''
@@ -345,12 +343,11 @@ class SeasonalityScript:
             self.monthly_df.reset_index(inplace= True)
             self.monthly_df["date"] = self.monthly_df["date"].dt.strftime(r"%d/%m/%Y")
 
-            print("Monthly dummies successfully built")
-            return self.monthly_df.head()
-        except Exception as ex:
-            print(f"Something went wrong on the build_monthly_dummies() function...")
-            print(ex)
-            return False
+            result = {"Monthly dummies built successfully": True}
+            print(result)
+        except Exception as error:
+            print(error)
+            raise
         
     def join_dataframes(self):
         '''
@@ -368,12 +365,12 @@ class SeasonalityScript:
             # Joins the bank holidays DataFrame with the new one
             # It uses the 'inner join' method and the 'date' column
             self.df = self.df.merge(self.new_df, how= "inner", on= "date")
-            print("DataFrames successfully joined")
-            return True
-        except Exception as ex:
-            print("Something went wrong on the join_dataframes() function...")
-            print(ex)
-            return False
+
+            result = {"DataFrames successfully joined": True}
+            print(result)
+        except Exception as error:
+            print(error)
+            raise
 
     def get_csv(self, outpath):
         '''
