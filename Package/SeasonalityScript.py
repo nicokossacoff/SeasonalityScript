@@ -6,24 +6,6 @@ from datetime import datetime, timedelta
 
 version = {"Current version": "1.0.0"}
 
-class Info:
-    def get_info(self):
-        '''
-        :reurns: str | all available countries and their country codes.
-        '''
-        self.country_info = {}
-
-        url = r'https://date.nager.at/api/v3/AvailableCountries'
-        connection = requests.get(url)
-        response = json.loads(connection.content)
-        
-        for item in response:
-            country_name = item["name"]
-            country_code = item["countryCode"]
-            self.country_info[country_name] = country_code
-        
-        return print(self.country_info)
-
 class SeasonalityScript:
     def __init__(self, country_code, start_date, end_date, day, uk_country= None, week_ending= False):
         '''
@@ -80,6 +62,23 @@ class SeasonalityScript:
     
     def get_version(self):
         print(version)
+    
+    def get_country_codes(self):
+        '''
+        :reurns: str | all available countries and their country codes.
+        '''
+        self.country_info = {}
+
+        url = r'https://date.nager.at/api/v3/AvailableCountries'
+        connection = requests.get(url)
+        response = json.loads(connection.content)
+        
+        for item in response:
+            country_name = item["name"]
+            country_code = item["countryCode"]
+            self.country_info[country_name] = country_code
+        
+        return print(self.country_info)
 
     def build_dataframe(self):
         '''
