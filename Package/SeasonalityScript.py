@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
+version = {"Current version": "1.0.0"}
+
 class Info:
     def get_info(self):
         '''
@@ -76,6 +78,9 @@ class SeasonalityScript:
             print(error)
             raise
     
+    def get_version(self):
+        print(version)
+
     def build_dataframe(self):
         '''
         Builds the structure of the DataFrame.
