@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 version = {"Current version": "1.0.0"}
 
 class SeasonalityScript:
-    def __init__(self, country_code, start_date, end_date, day, uk_country= None, week_ending= False):
+    def __init__(self, country_code: str, start_date: str, end_date: str, day: str, uk_country: str = None, week_ending: bool = False):
         '''
         Creates the object with all the important functions.
 
@@ -376,7 +376,7 @@ class SeasonalityScript:
             print(error)
             raise
 
-    def get_csv(self, outpath):
+    def get_csv(self, outpath: str):
         '''
         Creates the Seasonality csv file.
 
