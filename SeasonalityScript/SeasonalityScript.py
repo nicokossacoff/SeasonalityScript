@@ -375,7 +375,7 @@ class SeasonalityScript:
             print(error)
             raise
 
-    def get_csv(self, outpath: str):
+    def get_csv(self, outpath: str, long_format: bool = False):
         '''
         Creates the Seasonality csv file.
 
@@ -390,13 +390,20 @@ class SeasonalityScript:
             self.build_monthly_dummies()
             self.join_dataframes()
 
+            print("Preparing CSV file...")
+
+
+            #------------------------------------------------------------#
+            # This block of code is relevant for the Measure.Monks tools #
+            #------------------------------------------------------------#
+
             ## Creates the 'account' column and change the order of columns
             # self.df["account"] = "national"
             # columns = self.df.columns.tolist()
             # columns = columns[-1:] + columns[:-1]
             # self.df = self.df[columns]
 
-            print("Preparing CSV file...")
+            
 
             ## Creates an array with the DataFrame's headers
             ## That row will be added at the top of the DataFrame before adding the blank rows
@@ -407,7 +414,7 @@ class SeasonalityScript:
 
             ## Saves the DataFrame into a CSV file and
             ## opens it without the headers
-            self.df.to_csv(outpath + r"Seasonality.csv", index= False)
+            # self.df.to_csv(outpath + r"Seasonality.csv", index= False)
 
             # self.df = pd.read_csv(outpath + r"Seasonality.csv", skiprows= [0], header= None)
             # headers_row = pd.DataFrame(headers_row, columns= self.df.columns, index= [0])
@@ -434,6 +441,11 @@ class SeasonalityScript:
             # self.df = self.df.iloc[1:, :]
             # self.df.to_csv(outpath + r"\Seasonality.csv", index= False, header= None)
 
+            if long_format == True:
+                self.df = self.df.melt(id_vars= "date", var_name= "series_name", value_name= "value")
+                self.df.series_name = self.df.series_name.apply(lambda x: "Seasonality_" + x)
+
+            self.df.to_csv(outpath + r"Seasonality.csv", index= False)
             result = {"CSV file successfully written": True}
             print(result)
         except Exception as error:
