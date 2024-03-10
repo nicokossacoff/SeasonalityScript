@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-version = {"Current version": "1.0.0"}
-
 class SeasonalityScript:
     def __init__(self, country_code: str, start_date: str, end_date: str, day: str, uk_country: str = None, week_ending: bool = False):
         '''
@@ -61,6 +59,7 @@ class SeasonalityScript:
             raise
     
     def get_version(self):
+        version = {"Current version": "1.0.0"}
         print(version)
     
     def get_country_codes(self):
@@ -440,52 +439,3 @@ class SeasonalityScript:
         except Exception as error:
             print(error)
             raise
-
-class Date:
-    def date_convertion(self, wc, date):
-        try:
-            if wc == "MON":
-                if date.weekday() != 0:
-                    date = date - timedelta(date.weekday())
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "TUE":
-                if date.weekday() != 1:
-                    date = date - timedelta(date.weekday() - 1)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "WED":
-                if date.weekday() != 2:
-                    date = date - timedelta(date.weekday() - 2)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "THU":
-                if date.weekday() != 3:
-                    date = date - timedelta(date.weekday() - 3)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "FRI":
-                if date.weekday() != 4:
-                    date = date - timedelta(date.weekday() - 4)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "SAT":
-                if date.weekday() != 5:
-                    date = date - timedelta(date.weekday() - 5)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-            elif wc == "SUN":
-                if date.weekday() != 6:
-                    date = date - timedelta(date.weekday() - 6)
-                    return date.strftime(r"%d/%m/%Y")
-                else:
-                    return date.strftime(r"%d/%m/%Y")
-        except Exception as ex:
-            print("Something went wrong on the date_convertion() function...")
-            print(ex)
