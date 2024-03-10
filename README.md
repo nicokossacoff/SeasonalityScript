@@ -1,3 +1,8 @@
+# SeasonalityScript
+
+This script creates bank holiday variables as well as other seasonality variables for a specified country.
+
+## Description
 1.	Open the “Run” notebook.
 2.	Run the first block of code to import all the libraries needed.
 3.	The second line of code creates the SeasonalityScript object. At this point you will have to set some parameters:
