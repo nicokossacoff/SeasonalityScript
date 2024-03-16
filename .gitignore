@@ -1,2 +1,6 @@
+## Ignores all OS files
 .DS_Store
+
+## Ignores all __pycache__ folders
 *__pycache__/
+/SeasonalityScript/__pycache__/
