@@ -1,6 +1,6 @@
 # SeasonalityScript
 
-This script creates bank holiday variables as well as other seasonality variables for a specified country.
+This Python class creates bank holiday variables as well as other seasonality variables for a specified country.
 
 ## Description
 1.	Open the ```Run.ipynb``` notebook.
