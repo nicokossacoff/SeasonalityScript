@@ -2,7 +2,8 @@
 
 This Python class creates bank holiday variables as well as other seasonality variables for a specified country.
 
-## Description
+## Getting Started
+### Executing the program
 1.	Open the ```Run.ipynb``` notebook.
 2.	The first line of code will import the ```SeasonalityScript``` class.
 3.	The second line of code creates the ```SeasonalityScript``` object. At this point you will have to set some parameters:
