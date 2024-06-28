@@ -19,30 +19,24 @@ class SeasonalityScript:
         '''
         try:
             print("Creating object...")
-            self.years = []
             self.holidays = {}
             self.week_numbers = []
             self.week_dummies = {}
             self.month_numbers = []
             self.month_dummies = {}
             self.country_names = {}
-            # self.df = None
-            # self.weekly_df = None
-            # self.monthly_df = None
 
             self.country_id = country_code
             self.week_ending = week_ending
             self.day = day
             self.uk_country = uk_country
-            self.start_date = datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
-            self.end_date = datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y-%m-%d")
+            self.start_date = pd.to_datetime(start_date, format= r'%d/%m/%Y')
+            self.end_date = pd.to_datetime(end_date, format= r'%d/%m/%Y')
 
-            start_year = int(datetime.strptime(start_date, r"%d/%m/%Y").strftime(r"%Y"))
-            end_year = int(datetime.strptime(end_date, r"%d/%m/%Y").strftime(r"%Y"))
+            start_year = self.start_date.year
+            end_year = self.end_date.year
 
-            while start_year <= end_year:
-                self.years.append(start_year)
-                start_year += 1
+            self.years = np.arange(start_year, end_year + 1, 1)
             
             # Creates a dictionary with the country code and name
             url = r'https://date.nager.at/api/v3/AvailableCountries'
