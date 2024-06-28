@@ -83,8 +83,8 @@ class SeasonalityScript:
             print("Building DataFrame...")
             # Creates a list with all the dates between the start_date and end_date
             # Creates a DataFrame with only one column: 'date'
-            dates = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D")
-            self.df = pd.DataFrame({"date": dates})
+            dates = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D").to_frame(index= False, name= 'date')
+            # self.df = pd.DataFrame({"date": dates})
 
             result = {"DataFrame built succesfully": True}
             print(result)
