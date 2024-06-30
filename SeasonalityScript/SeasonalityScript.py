@@ -83,8 +83,7 @@ class SeasonalityScript:
             print("Building DataFrame...")
             # Creates a list with all the dates between the start_date and end_date
             # Creates a DataFrame with only one column: 'date'
-            dates = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D").to_frame(index= False, name= 'date')
-            # self.df = pd.DataFrame({"date": dates})
+            self.df = pd.date_range(start= self.start_date, end= self.end_date, freq= f"D").to_frame(index= False, name= 'date')
 
             result = {"DataFrame built succesfully": True}
             print(result)
@@ -128,7 +127,7 @@ class SeasonalityScript:
 
                 # Parses the holiday dictionary (i.e., iterates through all holidays)
                 for holiday in self.holidays:
-                    new_column = list()
+                    new_column = []
 
                     # Creates a list containing 1s and 0s
                     for (index, row) in self.df.iterrows():
@@ -148,7 +147,6 @@ class SeasonalityScript:
                 
                 # Resets index and changes the dates format
                 self.df.reset_index(inplace= True)
-                self.df["date"] = self.df["date"].dt.strftime(r"%d/%m/%Y")
 
                 # Handles punctuation issues
                 if self.country_id == "AR":
@@ -219,7 +217,6 @@ class SeasonalityScript:
 
                 # Resets index and changes the dates format
                 self.df.reset_index(inplace= True)
-                self.df["date"] = self.df["date"].dt.strftime(r"%d/%m/%Y")
 
                 # Solves punctuation issues
                 self.df = self.df.rename(columns= {'''Queen’s Platinum Jubilee BH''': '''Queen's Platinum Jubilee BH''', '''Queen’s State Funeral BH''': '''Queen's State Funeral BH''',
@@ -241,8 +238,7 @@ class SeasonalityScript:
         try:
             print("Building weekly dummies...")
             # Creates a new DataFrame with a daily frequency
-            dates = pd.date_range(start= self.start_date, end= self.end_date, freq= "D")
-            self.weekly_df = pd.DataFrame({"date": dates})
+            self.weekly_df = pd.date_range(start= self.start_date, end= self.end_date, freq= "D").to_frame(index= False, name= 'date')
 
             # Creates the 'Week #' column that will be used to create the dummy variables
             for (index, row) in self.weekly_df.iterrows():
@@ -278,7 +274,6 @@ class SeasonalityScript:
             
             # Resets index and changes the date format 
             self.weekly_df.reset_index(inplace= True)
-            self.weekly_df["date"] = self.weekly_df["date"].dt.strftime(r"%d/%m/%Y")
 
             result = {"Weekly dummies built successfully": True}
             print(result)
