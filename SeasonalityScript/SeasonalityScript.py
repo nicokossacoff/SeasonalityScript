@@ -138,7 +138,8 @@ class SeasonalityScript:
                             new_column.append(0)
 
                     # Creates the bank holiday column
-                    self.df[holiday + " BH"] = new_column
+                    holiday = holiday.replace("'", '').replace('.', '').replace(',', '')
+                    self.df['Seasonality-' + holiday] = new_column
                 
                 # Converts the daily data to weekly
                 if self.week_ending == False:
@@ -208,7 +209,8 @@ class SeasonalityScript:
                             new_column.append(0)
 
                     # Creates the bank holiday column
-                    self.df[holiday + " BH"] = new_column
+                    holiday = holiday.replace("'", '').replace('.', '').replace(',', '')
+                    self.df['Seasonality-' + holiday] = new_column
 
                 # Converts daily data to weekly
                 if self.week_ending == False:
@@ -258,7 +260,7 @@ class SeasonalityScript:
                     else:
                         self.week_dummies[week].append(0)
                 
-                self.weekly_df[f"Dummy {week}"] = self.week_dummies[week]
+                self.weekly_df[f"Seasonality-Week-{week}"] = self.week_dummies[week]
             
             # Drop the 'Week #' column
             self.weekly_df = self.weekly_df.drop(columns= "Week #")
@@ -316,7 +318,7 @@ class SeasonalityScript:
                     else:
                         self.month_dummies[month].append(0)
 
-                self.monthly_df[f"Dummy {month}"] = self.month_dummies[month]
+                self.monthly_df[f"Seasonality-{month}"] = self.month_dummies[month]
             
             # Drops unused columns
             self.monthly_df = self.monthly_df.drop(columns= ["Month #"])
