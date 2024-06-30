@@ -2,6 +2,7 @@ import json
 import requests
 import pandas as pd
 import numpy as np
+import os
 from datetime import datetime, timedelta
 
 class SeasonalityScript:
@@ -380,54 +381,60 @@ class SeasonalityScript:
             print("Preparing CSV file...")
 
             ## Creates the 'account' column and change the order of columns
-            # self.df["account"] = "national"
-            # columns = self.df.columns.tolist()
-            # columns = columns[-1:] + columns[:-1]
-            # self.df = self.df[columns]
-
-            
+            self.df["account"] = "national"
+            columns = list(self.df.columns)
+            columns = columns[-1:] + columns[:-1]
+            self.df = self.df[columns]
 
             ## Creates an array with the DataFrame's headers
             ## That row will be added at the top of the DataFrame before adding the blank rows
-            # headers_row = list()
-            # for header in self.df.columns:
-            #     headers_row.append(header)
-            # headers_row = np.array([headers_row])
+            headers_row = []
+            for header in self.df.columns:
+                headers_row.append(header)
+            headers_row = np.array([headers_row])
 
             ## Saves the DataFrame into a CSV file and
             ## opens it without the headers
-            # self.df.to_csv(outpath + r"Seasonality.csv", index= False)
-
-            # self.df = pd.read_csv(outpath + r"Seasonality.csv", skiprows= [0], header= None)
-            # headers_row = pd.DataFrame(headers_row, columns= self.df.columns, index= [0])
+            self.df.to_csv(outpath + r"Seasonality.csv", index= False)
+            self.df = pd.read_csv(outpath + r"Seasonality.csv", skiprows= [0], header= None)
+            headers_row = pd.DataFrame(headers_row, columns= self.df.columns, index= [0])
 
             ## Creates a DataFrame with the blank rows needed for the modeling tool
-            # rows = list()
-            # for r in range(0, 10):
-            #     row = list()
-            #     if r == 9:
-            #         for c in range(0, len(self.df.columns)):
-            #             if c == 0 or c == 1: row.append(None)
-            #             else: row.append("SUB")
-            #     else:        
-            #         for c in range(0, len(self.df.columns)):
-            #             row.append("Blank")
-            #     rows.append(row)
-            # blank = pd.DataFrame(data= rows, columns= self.df.columns)
+            rows = list()
+            for r in range(0, 10):
+                row = list()
+                if r == 9:
+                    for c in range(0, len(self.df.columns)):
+                        if c == 0 or c == 1: row.append(None)
+                        else: row.append("SUB")
+                else:        
+                    for c in range(0, len(self.df.columns)):
+                        row.append("Blank")
+                rows.append(row)
+            blank = pd.DataFrame(data= rows, columns= self.df.columns)
 
             ## Adds the headers row at the top of the new DataFrame
-            # self.df = pd.concat([headers_row, self.df], ignore_index= True)
+            self.df = pd.concat([headers_row, self.df], ignore_index= True)
 
             ## Concatenate both DataFrames and saves the new CSV file
-            # self.df = pd.concat([blank, self.df], ignore_index= True)
-            # self.df = self.df.iloc[1:, :]
-            # self.df.to_csv(outpath + r"\Seasonality.csv", index= False, header= None)
+            self.df = pd.concat([blank, self.df], ignore_index= True)
+            self.df = self.df.iloc[1:, :]
 
-            if long_format == True:
-                self.df = self.df.melt(id_vars= "date", var_name= "series_name", value_name= "value")
-                self.df.series_name = self.df.series_name.apply(lambda x: "Seasonality_" + x)
+            path_corrected = os.path.join(outpath, r'Seasonality.csv')
+            if long_format == False:
+                self.df.to_csv(path_corrected, index= False, header= None)
+            else:
+                self.df.columns = list(self.df.iloc[8, :])
+                self.df = self.df.iloc[9:, 1:]
+                self.df = self.df.melt(id_vars= 'date', var_name= 'series_name', value_name= 'value')
+                self.df = self.df[['series_name', 'date', 'value']]
+                self.df.to_csv(path_corrected, index= False, header= None)
 
-            self.df.to_csv(outpath + r"Seasonality.csv", index= False)
+            # if long_format == True:
+            #     self.df = self.df.melt(id_vars= "date", var_name= "series_name", value_name= "value")
+            #     self.df.series_name = self.df.series_name.apply(lambda x: "Seasonality_" + x)
+
+            # self.df.to_csv(outpath + r"Seasonality.csv", index= False)
             result = {"CSV file successfully written": True}
             print(result)
         except Exception as error:
