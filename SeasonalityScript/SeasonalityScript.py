@@ -292,12 +292,11 @@ class SeasonalityScript:
             print("Building monthly dummies...")
 
             # Creates a new DataFrame with a daily frequency
-            dates = pd.date_range(start= self.start_date, end= self.end_date, freq= "D")
-            self.monthly_df = pd.DataFrame({"date": dates})
+            self.monthly_df = pd.date_range(start= self.start_date, end= self.end_date, freq= "D").to_frame(index= False, name= 'date')
 
             # Creates the 'Month #' column that's use to create the dummy variables
             for (index, row) in self.monthly_df.iterrows():
-                self.month_numbers.append(row["date"].month)
+                self.month_numbers.append(row.date.month)
             self.monthly_df["Month #"] = self.month_numbers
             
             # Creates the dummy variables and appends them to the DataFrame
@@ -333,7 +332,6 @@ class SeasonalityScript:
 
             # Resets index and changes the dates formats
             self.monthly_df.reset_index(inplace= True)
-            self.monthly_df["date"] = self.monthly_df["date"].dt.strftime(r"%d/%m/%Y")
 
             result = {"Monthly dummies built successfully": True}
             print(result)
@@ -380,11 +378,6 @@ class SeasonalityScript:
             self.join_dataframes()
 
             print("Preparing CSV file...")
-
-
-            #------------------------------------------------------------#
-            # This block of code is relevant for the Measure.Monks tools #
-            #------------------------------------------------------------#
 
             ## Creates the 'account' column and change the order of columns
             # self.df["account"] = "national"
