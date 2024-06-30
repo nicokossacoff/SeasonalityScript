@@ -4,3 +4,5 @@
 ## Ignores all __pycache__ folders
 *__pycache__/
 /SeasonalityScript/__pycache__/
+
+test.ipynb
